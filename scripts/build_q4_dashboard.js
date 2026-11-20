@@ -93,6 +93,8 @@ function main() {
     .replace('Неделя 26 октября — 1 ноября отнесена к октябрю.', 'Неделя на стыке месяцев относится к месяцу, в котором она начинается.')
     .replace("'Итого за квартал'", "'Итого за период'")
     .replace('за квартал это только', 'за весь период это только');
+  // Метка версии, чтобы браузеры не показывали устаревший data.js из кеша.
+  html = html.replace('<script src="data.js"></script>', `<script src="data.js?v=${Date.now()}"></script>`);
   fs.writeFileSync(path.join(DIR,'index.html'),html);
   fs.writeFileSync(path.join(DIR,'data.js'),'window.Q4_DATA = '+JSON.stringify(data)+';\n');
   const site = path.join(ROOT,'site');
