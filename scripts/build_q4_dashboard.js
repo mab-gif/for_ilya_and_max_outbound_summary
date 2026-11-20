@@ -38,8 +38,9 @@ function aggregate(raw) {
     list.sort((a,b) => Date.parse(a.created_at) - Date.parse(b.created_at));
     list.forEach((e,i) => {
       const prev = list[i-1], next = list[i+1];
-      const reverted = next && next.from_status_id === e.to_status_id && Date.parse(next.created_at) - Date.parse(e.created_at) <= 600000;
-      const returned = prev && prev.from_status_id === e.to_status_id && Date.parse(e.created_at) - Date.parse(prev.created_at) <= 600000;
+      // Откат = пара A→B, B→A в пределах 10 минут (ошибочный клик); обе записи не считаются.
+      const reverted = next && next.from_status_id === e.to_status_id && next.to_status_id === e.from_status_id && Date.parse(next.created_at) - Date.parse(e.created_at) <= 600000;
+      const returned = prev && prev.from_status_id === e.to_status_id && prev.to_status_id === e.from_status_id && Date.parse(e.created_at) - Date.parse(prev.created_at) <= 600000;
       if (!reverted && !returned) arrivals.push(e);
     });
   }

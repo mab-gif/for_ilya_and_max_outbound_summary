@@ -53,7 +53,7 @@ color-scheme:light;
 <div class="q4" data-read lang="ru">
   <header class="q4-head" id="q4-head">
     <h1 class="q4-h1">Касания Q4 — Аутбаунд</h1>
-    <p class="q4-lead">1 октября — 19 ноября 2026. Новых контактов — <b data-draw="leadNew" data-source="qtotal" data-field="new" data-row="0">—</b>, передано команде — <b data-draw="leadHanded" data-source="qtotal" data-field="handed" data-row="0">—</b>.</p>
+    <p class="q4-lead">1 октября — 19 ноября 2026. Новых контактов — <b data-draw="leadNew" data-source="qtotal" data-field="new" data-row="0">—</b>, задач передано команде — <b data-draw="leadHanded" data-source="qtotal" data-field="handed" data-row="0">—</b>.</p>
   </header>
 
   <section class="q4-tiles" id="q4-quarter" aria-label="Итоги квартала">
@@ -73,12 +73,12 @@ color-scheme:light;
       <span class="q4-split" data-draw="split" data-metric="wait_task"></span>
     </div>
     <div class="q4-tile" id="tile-demo">
-      <span class="q4-tile-label">Демо / КП / квалификация</span>
+      <span class="q4-tile-label">Демо / передано команде</span>
       <span class="q4-num" data-draw="tDemo" data-source="qtotal" data-field="demo_kp" data-row="0">—</span>
       <span class="q4-split" data-draw="split" data-metric="demo_kp"></span>
     </div>
     <div class="q4-tile" id="tile-handed">
-      <span class="q4-tile-label">Передано команде</span>
+      <span class="q4-tile-label">Задача / передано команде</span>
       <span class="q4-num" data-draw="tHanded" data-source="qtotal" data-field="handed" data-row="0">—</span>
       <span class="q4-split" data-draw="split" data-metric="handed"></span>
     </div>
@@ -93,8 +93,8 @@ color-scheme:light;
           <th data-field="new">Новые</th>
           <th data-field="continuing">Продолжающиеся</th>
           <th data-field="wait_task">Ждём задачу</th>
-          <th data-field="demo_kp">Демо / КП</th>
-          <th data-field="handed">Передано</th>
+          <th data-field="demo_kp">Демо / передано</th>
+          <th data-field="handed">Задача / передано</th>
         </tr></thead>
         <tbody data-draw="months"></tbody>
       </table>
@@ -108,8 +108,8 @@ color-scheme:light;
         <option value="new">Новые контакты</option>
         <option value="continuing">Продолжающиеся</option>
         <option value="wait_task">Ждём задачу</option>
-        <option value="demo_kp">Демо / КП / квалификация</option>
-        <option value="handed">Передано команде</option>
+        <option value="demo_kp">Демо / передано команде</option>
+        <option value="handed">Задача / передано команде</option>
       </select>
     </div>
     <div class="q4-legend" data-draw="legend"></div>
@@ -126,8 +126,8 @@ color-scheme:light;
           <th data-field="new">Новые</th>
           <th data-field="continuing">Продолжающиеся</th>
           <th data-field="wait_task">Ждём задачу</th>
-          <th data-field="demo_kp">Демо / КП</th>
-          <th data-field="handed">Передано</th>
+          <th data-field="demo_kp">Демо / передано</th>
+          <th data-field="handed">Задача / передано</th>
         </tr></thead>
         <tbody data-draw="weekdetail"></tbody>
       </table>
@@ -139,7 +139,7 @@ color-scheme:light;
     <ul>
       <li>Новые контакты — карточки воронки «Аутбаунд», заведённые в периоде.</li>
       <li>Продолжающиеся — карточки, заведённые раньше периода, в которых в периоде была заметка или смена этапа. Поэтому за квартал это только контакты, заведённые до 1 октября, а сумма по неделям больше квартальной: одна карточка считается в каждой неделе, где было касание.</li>
-      <li>Ждём задачу, Демо / КП / квалификация, Передано команде — сколько карточек перешли на этот этап в периоде. Переход туда-обратно за 10 минут не считается.</li>
+      <li>Ждём задачу, Демо / передано команде, Задача / передано команде — сколько карточек перешли на этот этап в периоде. Переход туда-обратно за 10 минут не считается.</li>
       <li>Карточки, закрытые с причиной «Подхватила команда», не учитываются.</li>
       <li>Кто ведёт контакт — поле «Ньюбиз» на момент выгрузки.</li>
       <li>Недели — с понедельника по воскресенье, на границах периода обрезаются. Неделя 26 октября — 1 ноября отнесена к октябрю. Месячные итоги считаются по календарным месяцам.</li>
@@ -169,7 +169,7 @@ color-scheme:light;
 <script>
 window.q4 = window.q4 || { metric: 'new', week: null };
 window.q4.people = ['Маша', 'Лиза', 'Саша'];
-window.q4.labels = { new: 'Новые контакты', continuing: 'Продолжающиеся', wait_task: 'Ждём задачу', demo_kp: 'Демо / КП / квалификация', handed: 'Передано команде' };
+window.q4.labels = { new: 'Новые контакты', continuing: 'Продолжающиеся', wait_task: 'Ждём задачу', demo_kp: 'Демо / передано команде', handed: 'Задача / передано команде' };
 
 dash.calc('qtotal', {
   inputs: ['quarter'],
