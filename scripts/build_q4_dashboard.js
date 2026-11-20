@@ -44,12 +44,18 @@ function aggregate(raw) {
       if (!reverted && !returned) arrivals.push(e);
     });
   }
+  // Понедельник 00:00 по Москве для момента t.
+  const weekStart = (t) => { const d = new Date(t + 3 * 3600000); const day = (d.getUTCDay() + 6) % 7; return Date.UTC(d.getUTCFullYear(), d.getUTCMonth(), d.getUTCDate() - day) - 3 * 3600000; };
   function period(a,b) {
     const inside = x => Date.parse(x.created_at) >= a && Date.parse(x.created_at) <= b;
     return PEOPLE.map(newbiz => {
       const owned = leads.filter(l => l.newbiz === newbiz);
-      const touched = new Set([...notes.filter(inside), ...events.filter(e => e.type === 'lead_status_changed' && inside(e))].map(x => x.lead_id));
-      const row = {newbiz, new: owned.filter(inside).length, continuing: owned.filter(l => Date.parse(l.created_at) < a && touched.has(l.id)).length};
+      // Продолжающийся = контакт заведён раньше недели (пн–вс), в которую было касание (заметка или смена этапа).
+      // За месяц и весь период — уникальные контакты, которые были продолжающимися хотя бы в одну неделю.
+      const continuing = new Set([...notes.filter(inside), ...events.filter(e => e.type === 'lead_status_changed' && inside(e))]
+        .filter(x => { const l = byId.get(x.lead_id); return l && l.newbiz === newbiz && Date.parse(l.created_at) < weekStart(Date.parse(x.created_at)); })
+        .map(x => x.lead_id)).size;
+      const row = {newbiz, new: owned.filter(inside).length, continuing};
       for (const [key,id] of Object.entries(stages)) row[key] = new Set(arrivals.filter(e => inside(e) && id.has(e.to_status_id) && byId.get(e.lead_id).newbiz === newbiz).map(e => e.lead_id)).size;
       return row;
     });
@@ -89,10 +95,9 @@ function main() {
   html = html.replace('1 октября — 19 ноября 2026.', `${fmt(date(data.meta.from))} — ${fmt(date(data.meta.to))} ${data.meta.to.slice(0,4)}.`)
     .replace('на 19 ноября 2026', `на ${fmt(date(data.meta.to))} ${data.meta.to.slice(0,4)}`)
     .replace('16–19 ноября', `${fmt(date(data.weeks.at(-1).week_start))} — ${fmt(date(data.meta.to))}`)
-    .replace('заведённые до 1 октября', `заведённые до ${fmt(date(data.meta.from))}`)
     .replace('Неделя 26 октября — 1 ноября отнесена к октябрю.', 'Неделя на стыке месяцев относится к месяцу, в котором она начинается.')
     .replace("'Итого за квартал'", "'Итого за период'")
-    .replace('за квартал это только', 'за весь период это только');
+;
   // Метка версии, чтобы браузеры не показывали устаревший data.js из кеша.
   html = html.replace('<script src="data.js"></script>', `<script src="data.js?v=${Date.now()}"></script>`);
   fs.writeFileSync(path.join(DIR,'index.html'),html);
